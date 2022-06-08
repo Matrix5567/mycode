@@ -7,7 +7,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = 'eweb'
-#######urlsss
+
 urlpatterns = [
     path('', Home.as_view(),name='home'),
     path('category/', Items.as_view(),name = 'category'),
@@ -22,15 +22,11 @@ urlpatterns = [
     path('increment/<int:id>/',views.increment,name='increment'),
     path('decrement/<int:id>/',views.decrement,name='decrement'),
     path("checkout",Checkout.as_view(),name='checkout'),
-
-
     #path('create-checkout-session',views.create_checkout_session,name='create-checkout-session'),
     path('paysuc', Paymentsuccess.as_view(), name='paysuc'),
     path('payfail', Paymentfailed.as_view(), name='payfail'),
     path('stripe', views.stripe_payment, name='stripe'),
     path('basic/', views.API_objects.as_view()),
-
-#############
     path('basic/<int:pk>/', views.API_objects_details.as_view()),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('create/', views.add_items, name='add-items'),
