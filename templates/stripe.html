@@ -1,0 +1,60 @@
+<html>
+  <head>
+     <script src="https://js.stripe.com/v3/"></script>
+    <title>FLIPKART</title>
+      <script>
+    $(document).ready(function() {
+    $("#submit").click(function() {
+    var a = document.forms["sform"]["cardno"].value;
+    var b = document.forms["sform"]["expm"].value;
+    var c = document.forms["sform"]["expy"].value;
+    var d = document.forms["sform"]["cvc"].value;
+    if (a == null || a == "", b == null || b == "", c == null || c == "", d == null || d == "") {
+      alert("Please Fill All Required Field");
+      return false;
+      }
+    else {
+    $(this).html(
+        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Transaction in progress....please wait`
+      );
+
+    }
+      });
+});
+</script>
+  </head>
+  <body>
+  <div id="myModal3" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	</div>
+  <div class="modal-body">
+    <center>
+    <form name="sform" action="/stripe" method="post">{% csrf_token %}
+  <div id="payment-element">
+    <img src="https://cdn.dribbble.com/users/1980856/screenshots/4760116/comp_3.gif" height="300px;"
+         width="100%;" style="margin: 60px 5px;object-fit:fill;">
+    <h3><i>ENTER YOUR CARD DETAILS</i></h3>
+    {% if messages %}
+  {% for message in messages %}
+		<h1>{{message}}</h1>
+			{% endfor %}
+{% endif %}
+     <!-- Elements will create form elements here -->
+    <input type="number"  maxlength="15" placeholder="Cardnumber"  name="cardno" id="cardno"  required><br><br>
+    <input type="number"  maxlength="2" placeholder="Expiry month"  name="expm" id="expm"  required><br><br>
+    <input type="number"  maxlength="4" placeholder="Expiry year"  name="expy" id="expy"  required><br><br>
+    <input type="number"  maxlength="3" placeholder="CVC"  name="cvc" id="cvc" required><br><br>
+    <input type="hidden" value="{{price}}" name="price">
+  </div>
+  <button class="badge" style="background-color:#007bff;" id="submit">Confirm Payment</button>
+    </center>
+</form>
+  </div>
+</div>
+</div>
+  </div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load customtags %}
+
+<div class="container-fluid" style="position:relative;top:80px;background-color:yellow;">
+    <table class="table table-bordered">
+        <tr>
+            {% for i in category %}
+            <th><a href="/category/?product={{ i.name }}&filter_type={{ i.name }}">{{ i.name }}</a></th>
+            {% endfor %}
+        </tr>
+    </table>
+    <img src="https://images.milledcdn.com/2019-09-28/WgUyhzEuzIQ1MQcV/f1jG5xbLZXrM.gif" height="300px;"
+         width="100%;" style="margin: 60px 5px;object-fit:fill;">
+</div>
+<center><h5 style="position:relative;top:80px;"><b><a href="/?filter_type=l2h">Price--Low to High</a></b>&nbsp;&nbsp;<b><a href="/?filter_type=h2l">Price--High to Low</a></b>&nbsp;&nbsp;<b><a href="/?filter_type=nwst">Newest First</a></b></h5></center>
+<div class="container-fluid" style="position:relative;top:80px;">
+
+    <table class="table table-bordered">
+        {% for y in page_obj.object_list %}
+        <tr onclick="location.href='/detail?id={{y.id}}'">
+            <td><img src="{{ y.image }}"></td>
+            <td>
+                <b>{{ y.name }}</b> <br><br>
+                {% for description in y.description|key_list %}
+                <li>{{description}}</li>
+                {% endfor %}<br>
+                <p class="badge" style="background-color:#007bff;"> Discount amount {{ y.discountamount }} </p> <br><br>
+                {{ y.actualamount }} <br><br>
+                <p class="badge" style="background-color:#28a745;">{{ y.off }}</p></td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+<div style="position:relative;top:70px;text-align:center">
+    {%if page_obj.has_previous %} {# whether the previous page exists #}
+            <a href="?page={{page_obj.previous_page_number}}
+{% if request.GET.search %}&search={{request.GET.search}}{% endif %}
+{% if request.GET.filter_type %}&filter_type={{request.GET.filter_type}}{% endif %}
+">&nbsp;&nbsp;<</a>
+        {% endif %}
+        <span>{{page_obj.number}}</span>
+
+        {%if page_obj.has_next %} {# whether the next page exists #}
+            <a href="?page={{page_obj.next_page_number}}
+{% if request.GET.search %}&search={{request.GET.search}}{% endif %}
+{% if request.GET.filter_type %}&filter_type={{request.GET.filter_type}}{% endif %}
+">&nbsp;&nbsp;></a>
+        {% endif %}
+
+</div>
+{% include "loginmodal.html" %}
+{% include "signupmodal.html" %}
+{% endblock  %}

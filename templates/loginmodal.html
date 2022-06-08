@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;700&family=Poppins&display=swap');
+
+
+h1
+{
+  text-align:center;
+  padding: 0;
+  margin:0;
+  text-align: center;
+}
+
+label
+{
+  background-color: rgb;
+  padding: 2px;
+
+}
+
+
+
+#window
+{
+  background-color: #fff;
+  padding: 6rem 5rem 6rem 5rem;
+  border-radius: 6px;
+  width: 570px;
+  min-width: 20px;
+  border: 1px solid lightgrey;
+  //box-shadow: 5px 5px 15px black;
+}
+
+#LoginBtn
+{
+  width: 35%;
+  padding: .5rem;
+  background-color: black;
+  color: white;
+  font-size: 1rem;
+  cursor:pointer;
+  font-weight: 600;
+  border: solid black 2px;
+  font-family: 'Inter';
+  border-radius: 1.5px;
+  transition: .4s;
+
+ }
+
+#LoginBtn:hover
+{
+  color: black;
+  background-color: white;
+  border: solid black 2px;
+  background-color: rgba(156, 156, 156, 0.24);
+}
+
+input
+{
+  width: 100%;
+  border: none;
+  border-bottom: black solid 1px;
+  font-size: 1.1rem;
+  padding: 0;
+}
+
+input:focus
+{
+  background-color: rgba(156, 156, 156, 0.12);
+  border-bottom: black solid 1px;
+}
+
+*:focus
+{
+  outline: none;
+  border: none;
+}
+
+.data
+{
+  padding: 0;
+  width: 100%;
+}
+
+a {
+  text-align: center;
+  font-family: monospace;
+  font-size: 1.5rem;
+}
+</style>
+</head>
+<body>
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	</div>
+	<div class="modal-body">
+        {% csrf_token %}
+ <div id="window">
+  <h1> Login </h1>
+   <br>
+   <br>
+   <br>
+     <center>
+  <div class="data">
+  <label for="email">
+    <br>
+    <input type="text" name="email" id="email" placeholder="ENTER YOUR EMAIL">
+  </label>
+   <br>
+   <br>
+   <br>
+
+   <label for="password">
+
+    <br>
+    <input type="password" name="password" id="password" placeholder="PASSWORD">
+       </label>
+     <br>
+     <br>
+     <br>
+      <label for="password">
+
+    <br>
+    <div class="g-recaptcha" id="g-recaptcha-response" data-sitekey="6LdC8FEgAAAAAC-kWcUbGi8DZsOu37AHPrykpDfQ"></div>
+       </label>
+      <br>
+      <br>
+     <br>
+     <br>
+     <button id="LoginBtn" type="button" onclick="submit()"> Login </button>
+
+     <br>
+     <br>
+     <br>
+     <div style="text-align: center;">
+      <a href="#myModal2" data-toggle="modal">New user? register here </a>
+     </div>
+
+		<h4 id="er" style="color:red;"></h4>
+
+
+   </div>
+
+
+  </div>
+	</div>
+
+</div>
+</div>
+</div>
+</center>
+<script>
+    function submit(){
+      $.post("/login",
+      {
+        'email': document.getElementById('email').value,
+        'password': document.getElementById('password').value,
+        'g-recaptcha-response': document.getElementById('g-recaptcha-response').value,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      function(data, status){
+      if (data.status == '500'){
+      console.log("data",data.status)
+        $("#er").html('INVALID CREDENTIALS');
+      }
+        else{
+        location.href = "/";
+        }
+    });
+    }
+
+
+</script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+</body>
+</html>

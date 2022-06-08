@@ -1,0 +1,45 @@
+{% extends 'base2.html' %}
+{% block content %}
+{% load customtags %}
+
+<h1 style="position:relative;top:80px;"><b>{{ category }}</b></h1>
+<center><h5 style="position:relative;top:80px;"><b><a href="/category/?filter_type=l2h&product={{ category }}">Price--Low to High</a></b>&nbsp;&nbsp;<b><a href="/category/?filter_type=h2l&product={{ category }}">Price--High to Low</a></b>&nbsp;&nbsp;<b><a href="/category?filter_type=nwst&product={{ category }}">Newest First</a></b></h5></center>
+
+
+    <div class="container-fluid" style="position:relative;top:80px;">
+  <table class="table table-bordered">
+      {% for y in page_obj.object_list %}
+      <tr onclick="location.href='/detail?id={{y.id}}'">
+          <td><img src="http://localhost:8000/{{ y.image }}"></td>
+          <td>
+              <b>{{ y.name }}</b> <br><br>
+           {% for description in y.description|key_list %}
+              <li>{{description}}</li>
+              {% endfor %}<br>
+          <p class="badge" style="background-color:#007bff;"> Discount amount {{ y.discountamount }} </p> <br><br>
+          {{ y.actualamount }} <br><br>
+          <p class="badge"  style="background-color:#28a745;">{{ y.off }}</p></td>
+      </tr>
+          {% endfor %}
+
+  </table>
+</div>
+<div style="position:relative;top:70px;text-align:center">
+    {%if page_obj.has_previous %} {# whether the previous page exists #}
+            <a href="?page={{page_obj.previous_page_number}}
+{% if request.GET.filter_type %}&filter_type={{request.GET.filter_type}}&product={{ category }}{% endif %}
+{% if request.GET.search %}&search={{request.GET.search}}&category={{ category }}{% endif %}">&nbsp;&nbsp;<</a>
+        {% endif %}
+        <span>{{page_obj.number}}</span>
+
+        {%if page_obj.has_next %} {# whether the next page exists #}
+            <a href="?page={{page_obj.next_page_number}}
+{% if request.GET.filter_type %}&filter_type={{request.GET.filter_type}}&product={{ category }}{% endif %}
+{% if request.GET.search %}&search={{request.GET.search}}&category={{ category }}{% endif %}">&nbsp;&nbsp;></a>
+        {% endif %}
+
+
+</div>
+{% include "loginmodal.html" %}
+{% include "signupmodal.html" %}
+{% endblock  %}

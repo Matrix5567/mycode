@@ -1,0 +1,143 @@
+{% extends 'base2.html' %}
+{% load static %}
+{% block content %}
+<script>
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+    async function delete_product(id)
+    {
+    document.getElementById("prod_"+id).remove();
+     $.get("http://127.0.0.1:8000/delete/"+id+"/", function(data, status){});
+     await sleep(100);
+     $.ajax({url: "/total", success: function(result){
+      $("#total").html(result);
+    }});
+     $.ajax({url: "/cartcount", success: function(result){
+      $("#eg").html(result);
+    }});
+     }
+    $(document).ready(function(){
+
+    $.ajax({url: "/total", success: function(result){
+      $("#total").html(result);
+    }});
+});
+
+function increment(id) {
+document.getElementById(id);
+$.get("http://127.0.0.1:8000/increment/"+id+"/", function(data, status)
+   {
+   document.getElementById("count-"+id).innerHTML = data;
+
+   });
+   }
+function decrement(id) {
+document.getElementById(id);
+$.get("http://127.0.0.1:8000/decrement/"+id+"/", function(data, status)
+   {
+   document.getElementById("count-"+id).innerHTML = data;
+   });
+   }
+$(document).ready(function(){
+
+    $.ajax({url: "/unittotal", success: function(result){
+      $("#unittotal").html(result);
+    }});
+});
+
+async function unit_total(id)
+{
+
+await sleep(200);
+var quantity = document.getElementById("count-"+id).innerHTML;
+var amount =  document.getElementById("amt-"+id).innerHTML;
+document.getElementById("unittotal_"+id).innerHTML = quantity*amount;
+var totals = document.getElementsByClassName("unit_total");
+var sum = 0;
+for(var i=0;i<totals.length;i++)
+{
+
+sum+=parseInt(totals[i].innerHTML);
+
+}
+document.getElementById("total").innerHTML = sum;
+
+
+}
+
+
+
+</script>
+
+<br><br><br><br><br><br>
+<img src="https://cdn.dribbble.com/users/1980856/screenshots/4760116/comp_3.gif" height="300px;"
+         width="100%;" style="margin: 60px 5px;object-fit:fill;">
+<h1><b>YOUR CART</b></h1>
+{% if request.user.is_authenticated %}
+      <div class="container-fluid">
+  <table class="table table-bordered">
+      <tr>
+        <th>IMAGE</th>
+        <th>NAME</th>
+        <th>QUANTITY</th>
+        <th>DATE</th>
+        <th>UNIT AMOUNT</th>
+          <th>UNIT TOTAL</th>
+    </tr>
+      {% for y in products %}
+      <tr id="prod_{{y.id}}">
+          <td><img src="http://localhost:8000/{{  y.product.image  }}" style="height:100px"><br><button onclick="delete_product(this.id)" id="{{y.id}}"><h6 class="badge" style="background-color:#FF0000;">REMOVE ITEM</h6></button></td>
+          <td>
+              <b>{{ y.product }}</b> </td><br><br>
+            <td><img onclick="increment(this.id);unit_total(this.id)" id="{{y.id}}" src="{% static 'image/uparrow.png' %}" height="20"
+                                                                    width="20">
+
+                <p id="count-{{y.id}}">{{ y.quantity }}</p><img onclick="decrement(this.id);unit_total(this.id)" id="{{y.id}}" src="{% static 'image/downarrow.png' %}" height="20"
+                                                                    width="20"> </td>
+            <td>
+              <b>{{ y.date }}</b> </td><br><br>
+          <td><p class="badge" style="background-color:#007bff;" id="amt-{{y.id}}">{{ y.product.discountamount }}</p> <br><br></td>
+          <td class="unit_total" id="unittotal_{{y.id}}">{% widthratio y.product.discountamount 1 y.quantity %}</td>
+
+      </tr>
+      {% endfor %}
+       </table>
+          </div>
+<div>
+<h3>TOTAL : </h3><h3 id="total"></h3>
+    <a href="/checkout"><button class="btn btn-success">Check out</button></a>
+</div>
+      {% else %}
+      <div class="container-fluid">
+  <table class="table table-bordered">
+      <tr>
+        <th>IMAGE</th>
+        <th>NAME</th>
+        <th>QUANTITY</th>
+        <th>UNIT AMOUNT</th>
+          <th>UNIT TOTAL</th>
+    </tr>
+      {% for y,x in products %}
+      <tr id="prod_{{y.id}}" class="product">
+          <td><img src="http://localhost:8000/{{ y.image }}" style="width:30px;height:70px"><br><button onclick="delete_product(this.id)" id="{{y.id}}"><h6 class="badge" style="background-color:#FF0000;">REMOVE ITEM</h6></button></td>
+          <td>
+              <b>{{ y.name }}</b> </td><br><br>
+          <td> <img onclick="increment(this.id);unit_total(this.id)" id="{{y.id}}" src="{% static 'image/uparrow.png' %}" height="20"
+                                                                    width="20"><p id="count-{{y.id}}">{{x}}</p>
+                <img onclick="decrement(this.id);unit_total(this.id)" id="{{y.id}}" src="{% static 'image/downarrow.png' %}" height="20"
+                                                                    width="20"></td>
+          <td><p class="badge" style="background-color:#007bff;" id="amt-{{y.id}}"> {{ y.discountamount }} </p> <br><br></td>
+          <td class="unit_total" id="unittotal_{{y.id}}">{% widthratio y.discountamount 1 x %}</td>
+      </tr>
+          {% endfor %}
+  </table>
+</div>
+<div>
+<h3>TOTAL :</h3><h3 id="total"></h3><br>
+    <a href="#myModal" data-toggle="modal"> <button class="btn btn-success">Check out</button></a>
+</div>
+{% endif %}
+{% include "loginmodal.html" %}
+{% include "signupmodal.html" %}
+{% endblock  %}

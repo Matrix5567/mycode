@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load customtags %}
+<script>
+$(document).ready(function(){
+
+  $("#add").click(function(){
+    $.ajax({url: "/cartcount",
+    data : {
+        product_id : $(this).attr("item_id")
+        },
+    success: function(result){
+      $("#eg").html(result);
+    }});
+  });
+
+
+});
+
+</script>
+<center><h1 style="position:relative;top:70px;"><b> PRODUCT DETAILS</b></h1></center>
+<div class="container-fluid" style="position:relative;top:80px;">
+  <table class="table table-bordered">
+      <tr>
+          <td><img src="http://localhost:8000/{{ item.image }}">
+          </td>
+          <td>
+              <b>{{ item.name }}<b> <br><br>
+              {% for description in item.description|key_list %}
+              <li>{{item.description}}</li>
+              {% endfor %}<br>
+              <p class="badge" style="background-color:#007bff;"> Discount amount {{ item.discountamount }} </p><br>
+              {{ item.actualamount }} <br><br>
+              <p class="badge"  style="background-color:#28a745;">{{ item.off }}</p></td>
+
+          </td>
+      </tr>
+  </table>
+</div>
+
+<center>
+      <button style="position:relative;top:90px;" type="button" class="btn btn-warning"  item_id="{{ item.id }}" id="add">ADD TO CART</button>
+
+
+{% include "loginmodal.html" %}
+{% include "signupmodal.html" %}
+{% endblock  %}
+
