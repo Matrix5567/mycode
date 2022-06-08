@@ -7,7 +7,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = 'eweb'
-# url routes
+#######urlsss
 urlpatterns = [
     path('', Home.as_view(),name='home'),
     path('category/', Items.as_view(),name = 'category'),
