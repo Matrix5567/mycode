@@ -29,6 +29,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.http import urlencode
 import ast
+from django.core.paginator import Paginator
 
 # Create your views here.
 class Home(View):                                  # all products pagenation , search , low to high , high to low , newest first
